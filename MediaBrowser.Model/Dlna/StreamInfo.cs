@@ -115,7 +115,9 @@ public class StreamInfo
     /// Gets or sets the audio codecs.
     /// </summary>
     /// <value>The audio codecs.</value>
-    public IReadOnlyList<string> AudioCodecs { get; set; }
+    // RANFT - NEEDED TO CHANGE IReadOnlyList to IList FOR ANOTHER WAY TO FIX THE ISSUE
+    public IList<string> AudioCodecs { get; set; }
+    // public IReadOnlyList<string> AudioCodecs { get; set; }
 
     /// <summary>
     /// Gets or sets the video codecs.
@@ -563,7 +565,8 @@ public class StreamInfo
                 }
             }
 
-            return AudioCodecs;
+            // RANFT - NEED TO ADD THE (IReadOnlyList<string>) CAST FOR ANOTHER WAY TO FIX
+            return (IReadOnlyList<string>)AudioCodecs;
         }
     }
 

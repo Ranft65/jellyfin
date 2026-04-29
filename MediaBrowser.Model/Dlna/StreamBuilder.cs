@@ -29,8 +29,11 @@ namespace MediaBrowser.Model.Dlna
         private readonly ILogger _logger;
         private readonly ITranscoderSupport _transcoderSupport;
         private static readonly string[] _supportedHlsVideoCodecs = ["h264", "hevc", "vp9", "av1"];
-        private static readonly string[] _supportedHlsAudioCodecsTs = ["aac", "ac3", "eac3", "mp3"];
-        private static readonly string[] _supportedHlsAudioCodecsMp4 = ["aac", "ac3", "eac3", "mp3", "alac", "flac", "opus", "dts", "truehd"];
+        // USED - MUST BE USED FOR ANOTHER WAY TO FIX - RANFT - Removed readonly from _supportedHlsAudioCodecsTs and _supportedHlsAudioCodecsMp4
+        // private static readonly string[] _supportedHlsAudioCodecsTs = ["aac", "ac3", "eac3", "mp3"];
+        // private static readonly string[] _supportedHlsAudioCodecsMp4 = ["aac", "ac3", "eac3", "mp3", "alac", "flac", "opus", "dts", "truehd"];
+        private static string[] _supportedHlsAudioCodecsTs = ["aac", "ac3", "eac3", "mp3"];
+        private static string[] _supportedHlsAudioCodecsMp4 = ["aac", "ac3", "eac3", "mp3", "alac", "flac", "opus", "dts", "truehd"];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamBuilder"/> class.
@@ -250,6 +253,25 @@ namespace MediaBrowser.Model.Dlna
                 stream.DeviceId = options.DeviceId;
                 stream.DeviceProfileId = options.Profile.Id?.ToString("N", CultureInfo.InvariantCulture);
             }
+
+            // RANFT - START OF ANOTHER WAY TO FIX THE ISSUE
+            foreach (var stream in streams)
+            {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                if (stream.TargetAudioStream.Codec == "aac" && stream.TargetAudioStream.Channels > 2)
+                {
+                    for (int j = 0; j < stream.AudioCodecs.Count; j++)
+                    {
+                        if (stream.AudioCodecs[j] == "aac")
+                        {
+                            stream.AudioCodecs[j] = "ac3";
+                        }
+                    }
+                }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            }
+
+            // RANFT - END OF ANOTHER WAY TO FIX THE ISSUE
 
             return GetOptimalStream(streams, options.GetMaxBitrate(false) ?? 0);
         }
@@ -1084,7 +1106,7 @@ namespace MediaBrowser.Model.Dlna
 
             var appliedAudioConditions = options.Profile.CodecProfiles
                 .Where(i => i.Type == CodecType.VideoAudio &&
-                    i.ContainsAnyCodec(playlistItem.AudioCodecs, container) &&
+                    i.ContainsAnyCodec((IReadOnlyList<string>)playlistItem.AudioCodecs, container) && // RANFT - NEED TO ADD THE (IReadOnlyList<string>) CAST FOR ANOTHER WAY TO FIX
                     i.ApplyConditions.All(applyCondition => ConditionProcessor.IsVideoAudioConditionSatisfied(applyCondition, audioChannels, inputAudioBitrate, inputAudioSampleRate, inputAudioBitDepth, audioProfile, isSecondaryAudio)))
                 // Reverse codec profiles for backward compatibility - first codec profile has higher priority
                 .Reverse();
@@ -1555,7 +1577,7 @@ namespace MediaBrowser.Model.Dlna
                     continue;
                 }
 
-                if (!subtitleStream.IsExternal && playMethod == PlayMethod.Transcode && !transcoderSupport.CanExtractSubtitles(subtitleStream.Codec))
+                if (!subtitleStream.IsExternal && !transcoderSupport.CanExtractSubtitles(subtitleStream.Codec))
                 {
                     continue;
                 }
@@ -2391,6 +2413,12 @@ namespace MediaBrowser.Model.Dlna
             if (audioStream.IsExternal)
             {
                 failures |= TranscodeReason.AudioIsExternal;
+            }
+
+            // RANFT - GetCompatibilityAudioCodec NOT NEEDED FOR FIRST FIX APPROACH NEEDED FOR ANOTHER FIX APPROACH
+            if (true && audioStream.Codec == "aac" && audioStream.Channels > 2)
+            {
+                failures |= TranscodeReason.AudioChannelsNotSupported;
             }
 
             return failures;
