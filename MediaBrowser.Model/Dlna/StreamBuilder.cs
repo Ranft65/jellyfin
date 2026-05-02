@@ -258,11 +258,11 @@ namespace MediaBrowser.Model.Dlna
             foreach (var stream in streams)
             {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                if (stream.TargetAudioStream.Codec == "aac" && stream.TargetAudioStream.Channels > 2)
+                if ((stream.TargetAudioStream.Codec == "aac" && stream.TargetAudioStream.Channels > 2) || stream.TargetAudioStream.Codec == "truehd")
                 {
                     for (int j = 0; j < stream.AudioCodecs.Count; j++)
                     {
-                        if (stream.AudioCodecs[j] == "aac")
+                        if (stream.AudioCodecs[j] == "aac" || stream.AudioCodecs[j] == "truehd" )
                         {
                             stream.AudioCodecs[j] = "ac3";
                         }
@@ -2416,7 +2416,7 @@ namespace MediaBrowser.Model.Dlna
             }
 
             // RANFT - GetCompatibilityAudioCodec NOT NEEDED FOR FIRST FIX APPROACH NEEDED FOR ANOTHER FIX APPROACH
-            if (true && audioStream.Codec == "aac" && audioStream.Channels > 2)
+            if ((audioStream.Codec == "aac" && audioStream.Channels > 2) || audioStream.Codec == "truehd")
             {
                 failures |= TranscodeReason.AudioChannelsNotSupported;
             }
