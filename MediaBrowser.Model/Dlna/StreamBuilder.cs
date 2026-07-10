@@ -263,7 +263,7 @@ namespace MediaBrowser.Model.Dlna
                 {
                     for (int j = 0; j < stream.AudioCodecs.Count; j++)
                     {
-                        //if (stream.AudioCodecs[j] == "aac" || stream.AudioCodecs[j] == "truehd" )
+                        // if (stream.AudioCodecs[j] == "aac" || stream.AudioCodecs[j] == "truehd" )
                         if (stream.AudioCodecs[j] == "aac")
                         {
                             stream.AudioCodecs[j] = "ac3";
