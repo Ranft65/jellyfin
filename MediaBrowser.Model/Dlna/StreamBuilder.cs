@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-// using Jellyfin.Api.Controllers;
 using Jellyfin.Data.Enums;
 using Jellyfin.Extensions;
 using MediaBrowser.Model.Configuration;
@@ -37,14 +36,15 @@ namespace MediaBrowser.Model.Dlna
         // private static readonly string[] _supportedHlsAudioCodecsMp4 = ["aac", "ac3", "eac3", "mp3", "alac", "flac", "opus", "dts", "truehd"];
         private static string[] _supportedHlsAudioCodecsTs = ["aac", "ac3", "eac3", "mp3"];
         private static string[] _supportedHlsAudioCodecsMp4 = ["aac", "ac3", "eac3", "mp3", "alac", "flac", "opus", "dts", "truehd"];
-        // private readonly EncodingOptions _encodingOptions =  // RANFT ADDED FOR ADDING OPTIONS
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamBuilder"/> class.
         /// </summary>
         /// <param name="transcoderSupport">The <see cref="ITranscoderSupport"/> object.</param>
         /// <param name="logger">The <see cref="ILogger"/> object.</param>
-        public StreamBuilder(ITranscoderSupport transcoderSupport, ILogger logger)
+        public StreamBuilder(
+                    ITranscoderSupport transcoderSupport,
+                    ILogger logger)
         {
             _transcoderSupport = transcoderSupport;
             _logger = logger;
@@ -262,11 +262,7 @@ namespace MediaBrowser.Model.Dlna
             }
 
             // RANFT - START OF ANOTHER WAY TO FIX THE ISSUE
-            // var flag = true;
-
-            // var res = DynamicHlsController.GetSegmentLengthsInternal(runtimeTicks, segmentlength);
-            // var IServerConfigurationManager serverConfigurationManager;
-            // _encodingOptions = serverConfigurationManager.GetEncodingOptions();
+            // var encoding = _config.GetEncodingOptions();
 
             foreach (var stream in streams)
             {
