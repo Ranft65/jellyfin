@@ -58,6 +58,7 @@ public class EncodingOptions
         EnableHardwareEncoding = true;
         AllowHevcEncoding = false;
         AllowAv1Encoding = false;
+        TranscodeSurroundAACtoAC3 = true;
         EnableSubtitleExtraction = true;
         SubtitleExtractionTimeoutMinutes = 30;
         AllowOnDemandMetadataBasedKeyframeExtractionForExtensions = ["mkv"];
@@ -284,6 +285,13 @@ public class EncodingOptions
     /// Gets or sets a value indicating whether AV1 encoding is enabled.
     /// </summary>
     public bool AllowAv1Encoding { get; set; }
+
+    // RANFT - ADDED OPTION FOR FORCED TRANSCODING OF AAC AUDIO TRACKS (> 2 CHANNELS) TO AC3 AUDIO TRACKS
+
+    /// <summary>
+    /// Gets or sets a value indicating whether Surround AAC audio tracks should be transcoded to AC3 audio tracks. This is useful for clients that do not support multi-channel AAC audio.
+    /// </summary>
+    public bool TranscodeSurroundAACtoAC3 { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether subtitle extraction is enabled.

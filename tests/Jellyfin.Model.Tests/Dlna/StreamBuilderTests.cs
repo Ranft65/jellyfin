@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Jellyfin.Data.Enums;
 using Jellyfin.Extensions.Json;
+using MediaBrowser.Model.Configuration;
 using MediaBrowser.Model.Dlna;
 using MediaBrowser.Model.Dto;
 using MediaBrowser.Model.Entities;
@@ -371,7 +372,7 @@ namespace Jellyfin.Model.Tests
             Assert.Equal(streamInfo?.SubtitleStreamIndex, options.SubtitleStreamIndex);
         }
 
-        private StreamInfo? BuildVideoItemSimpleTest(MediaOptions options, PlayMethod? playMethod, TranscodeReason why, string transcodeMode, string transcodeProtocol)
+        private StreamInfo? BuildVideoItemSimpleTest(MediaOptions options, PlayMethod? playMethod, TranscodeReason why, string transcodeMode, string transcodeProtocol) // RANFT65 , EncodingOptions encodingoOptions
         {
             if (string.IsNullOrEmpty(transcodeProtocol))
             {
@@ -381,6 +382,7 @@ namespace Jellyfin.Model.Tests
             var builder = GetStreamBuilder();
 
             var streamInfo = builder.GetOptimalVideoStream(options);
+
             Assert.NotNull(streamInfo);
 
             if (playMethod is not null)

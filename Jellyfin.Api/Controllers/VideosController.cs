@@ -425,6 +425,9 @@ public class VideosController : BaseJellyfinApiController
             EnableAudioVbrEncoding = enableAudioVbrEncoding
         };
 
+        var encodingOptions = _serverConfigurationManager.GetEncodingOptions();   // RANFT65 move this to here so we can return it for all returns.
+        var flag = encodingOptions.TranscodeSurroundAACtoAC3;
+
         var state = await StreamingHelpers.GetStreamingState(
                 streamingRequest,
                 HttpContext,
@@ -481,7 +484,7 @@ public class VideosController : BaseJellyfinApiController
         }
 
         // Need to start ffmpeg (because media can't be returned directly)
-        var encodingOptions = _serverConfigurationManager.GetEncodingOptions();
+        // var encodingOptions = _serverConfigurationManager.GetEncodingOptions();  RANFT65 - I moved this further up.
         var ffmpegCommandLineArguments = _encodingHelper.GetProgressiveVideoFullCommandLine(state, encodingOptions, EncoderPreset.superfast);
         return await FileStreamResponseHelpers.GetTranscodedFile(
             state,

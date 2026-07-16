@@ -253,6 +253,8 @@ public class MediaInfoHelper
         }
 
         // Beginning of Playback Determination
+        // var flag = false;
+
         var streamInfo = item.MediaType == MediaType.Audio
             ? streamBuilder.GetOptimalAudioStream(options)
             : streamBuilder.GetOptimalVideoStream(options);

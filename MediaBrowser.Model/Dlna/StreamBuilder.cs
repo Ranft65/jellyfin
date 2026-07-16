@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+// using Jellyfin.Api.Controllers;
 using Jellyfin.Data.Enums;
 using Jellyfin.Extensions;
+using MediaBrowser.Model.Configuration;
 using MediaBrowser.Model.Dto;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Extensions;
 using MediaBrowser.Model.MediaInfo;
 using MediaBrowser.Model.Session;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace MediaBrowser.Model.Dlna
@@ -34,6 +37,7 @@ namespace MediaBrowser.Model.Dlna
         // private static readonly string[] _supportedHlsAudioCodecsMp4 = ["aac", "ac3", "eac3", "mp3", "alac", "flac", "opus", "dts", "truehd"];
         private static string[] _supportedHlsAudioCodecsTs = ["aac", "ac3", "eac3", "mp3"];
         private static string[] _supportedHlsAudioCodecsMp4 = ["aac", "ac3", "eac3", "mp3", "alac", "flac", "opus", "dts", "truehd"];
+        // private readonly EncodingOptions _encodingOptions =  // RANFT ADDED FOR ADDING OPTIONS
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamBuilder"/> class.
@@ -225,6 +229,9 @@ namespace MediaBrowser.Model.Dlna
             return playlistItem;
         }
 
+        // RANFT - WE NEED TO PASS encodingOptions to GetOptimalVideoStream to be able to access the setting of TranscodeSurroundAACtoAC3
+        // <param name="encodingOptions">The <see cref="EncodingOptions"/> object to get the encoding options from.</param>
+
         /// <summary>
         /// Gets the optimal video stream.
         /// </summary>
@@ -255,6 +262,12 @@ namespace MediaBrowser.Model.Dlna
             }
 
             // RANFT - START OF ANOTHER WAY TO FIX THE ISSUE
+            // var flag = true;
+
+            // var res = DynamicHlsController.GetSegmentLengthsInternal(runtimeTicks, segmentlength);
+            // var IServerConfigurationManager serverConfigurationManager;
+            // _encodingOptions = serverConfigurationManager.GetEncodingOptions();
+
             foreach (var stream in streams)
             {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
