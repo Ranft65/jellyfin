@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using Jellyfin.Data.Enums;
 using Jellyfin.Extensions;
 using MediaBrowser.Model.Configuration;
@@ -236,8 +237,9 @@ namespace MediaBrowser.Model.Dlna
         /// Gets the optimal video stream.
         /// </summary>
         /// <param name="options">The <see cref="MediaOptions"/> object to get the video stream from.</param>
+        /// <param name="transcodeSurroundAACtoAC3">Boolean flag that indicates whether or not surround AAC should be transcoded to AC3.</param>
         /// <returns>The <see cref="StreamInfo"/> of the optimal video stream.</returns>
-        public StreamInfo? GetOptimalVideoStream(MediaOptions options)
+        public StreamInfo? GetOptimalVideoStream(MediaOptions options, bool transcodeSurroundAACtoAC3) // RANFT - Added passing transcodeSurroundAACtoAC3
         {
             ValidateMediaOptions(options, true);
 
@@ -262,13 +264,12 @@ namespace MediaBrowser.Model.Dlna
             }
 
             // RANFT - START OF ANOTHER WAY TO FIX THE ISSUE
-            // var encoding = _config.GetEncodingOptions();
 
             foreach (var stream in streams)
             {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 // if ((stream.TargetAudioStream.Codec == "aac" && stream.TargetAudioStream.Channels > 2) || stream.TargetAudioStream.Codec == "truehd")
-                if (stream.TargetAudioStream.Codec == "aac" && stream.TargetAudioStream.Channels > 2)
+                if (transcodeSurroundAACtoAC3 && stream.TargetAudioStream.Codec == "aac" && stream.TargetAudioStream.Channels > 2)
                 {
                     for (int j = 0; j < stream.AudioCodecs.Count; j++)
                     {

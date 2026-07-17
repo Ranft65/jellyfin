@@ -253,11 +253,12 @@ public class MediaInfoHelper
         }
 
         // Beginning of Playback Determination
-        // var flag = false;
+
+        var transcodeSurroundAACtoAC3 = _serverConfigurationManager.Configuration.TranscodeSurroundAACtoAC3; // RANFT - ADDED THIS LINE
 
         var streamInfo = item.MediaType == MediaType.Audio
             ? streamBuilder.GetOptimalAudioStream(options)
-            : streamBuilder.GetOptimalVideoStream(options);
+            : streamBuilder.GetOptimalVideoStream(options, transcodeSurroundAACtoAC3);  // RANFT - ADDED transcodeSurroundAACtoAC3 as a parameter to GetOptimalVideoStream
 
         if (streamInfo is not null)
         {

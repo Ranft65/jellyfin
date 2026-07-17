@@ -289,8 +289,17 @@ public class ServerConfiguration : BaseApplicationConfiguration
     /// </summary>
     public bool EnableLegacyAuthorization { get; set; }
 
+    // RANFT - Start of added configuration options
+
     /// <summary>
-    /// Gets or sets a value indicating whether surround sound AAC is transcoded to AC3.
+    /// Gets or sets a value indicating Whether surround AAC should be transcoded to AC3.
     /// </summary>
-    public bool TranscodeSurroundSoundAACToAC3 { get; set; }
+    public bool TranscodeSurroundAACtoAC3 { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating Whether dummyZZZZ should be set or not.
+    /// </summary>
+    public bool DummyZZZZ { get; set; }
+
+    // RANFT - End of added configuration options
 }

@@ -54,13 +54,6 @@ namespace MediaBrowser.Model.Dlna
         /// </summary>
         public bool AlwaysBurnInSubtitleWhenTranscoding { get; set; }
 
-        // RANFT - ADDED OPTION FOR FORCED TRANSCODING OF AAC AUDIO TRACKS (> 2 CHANNELS) TO AC3 AUDIO TRACKS
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Surround AAC audio tracks should be transcoded to AC3 audio tracks. This is useful for clients that do not support multi-channel AAC audio.
-        /// </summary>
-        public bool TranscodeSurroundAACtoAC3 { get; set; }
-
         /// <summary>
         /// Gets or sets the item id.
         /// </summary>

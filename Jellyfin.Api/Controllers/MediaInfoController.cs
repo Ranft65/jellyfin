@@ -188,13 +188,6 @@ public class MediaInfoController : BaseJellyfinApiController
 
         if (profile is not null)
         {
-            // RANFT65
-            // private readonly IMediaSourceManager _mediaSourceManager;
-            // private readonly IDeviceManager _deviceManager;
-            // private readonly ILibraryManager _libraryManager;
-            // private readonly ILogger<MediaInfoController> _logger;
-            // private readonly MediaInfoHelper _mediaInfoHelper;
-            // private readonly IUserManager _userManager;
             userId = RequestHelpers.GetUserId(User, userId);
 
             // set device specific data

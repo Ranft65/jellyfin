@@ -381,7 +381,7 @@ namespace Jellyfin.Model.Tests
 
             var builder = GetStreamBuilder();
 
-            var streamInfo = builder.GetOptimalVideoStream(options);
+            var streamInfo = builder.GetOptimalVideoStream(options, false);  // RANFT - added false due to changes to GetOptimalVideoStream
 
             Assert.NotNull(streamInfo);
 
