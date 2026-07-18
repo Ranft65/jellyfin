@@ -296,10 +296,5 @@ public class ServerConfiguration : BaseApplicationConfiguration
     /// </summary>
     public bool TranscodeSurroundAACtoAC3 { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating Whether dummyZZZZ should be set or not.
-    /// </summary>
-    public bool DummyZZZZ { get; set; }
-
     // RANFT - End of added configuration options
 }

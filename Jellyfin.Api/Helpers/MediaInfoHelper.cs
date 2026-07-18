@@ -12,6 +12,7 @@ using Jellyfin.Data.Enums;
 using Jellyfin.Database.Implementations.Entities;
 using Jellyfin.Database.Implementations.Enums;
 using Jellyfin.Extensions;
+using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Extensions;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Controller.Configuration;
@@ -20,6 +21,7 @@ using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Audio;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.MediaEncoding;
+using MediaBrowser.Model.Configuration;
 using MediaBrowser.Model.Dlna;
 using MediaBrowser.Model.Dto;
 using MediaBrowser.Model.Entities;
@@ -254,7 +256,9 @@ public class MediaInfoHelper
 
         // Beginning of Playback Determination
 
-        var transcodeSurroundAACtoAC3 = _serverConfigurationManager.Configuration.TranscodeSurroundAACtoAC3; // RANFT - ADDED THIS LINE
+        var transcodeSurroundAACtoAC3 = _serverConfigurationManager.Configuration.TranscodeSurroundAACtoAC3; // RANFT - ADDED THIS LINE (Uses system.xml value)
+        var encodingOptions = _serverConfigurationManager.GetEncodingOptions();  // RANFT - ADDED THIS LINE (Uses encoding.xml set by modified Web GUI)
+        transcodeSurroundAACtoAC3 = encodingOptions.ForceTranscodingOfSurroundAACtoAC3; // RANFT - ADDED THIS LINE (Uses encoding.xml set by modified Web GUI)
 
         var streamInfo = item.MediaType == MediaType.Audio
             ? streamBuilder.GetOptimalAudioStream(options)
