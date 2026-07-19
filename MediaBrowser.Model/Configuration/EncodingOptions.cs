@@ -58,7 +58,7 @@ public class EncodingOptions
         EnableHardwareEncoding = true;
         AllowHevcEncoding = false;
         AllowAv1Encoding = false;
-        ForceTranscodingOfSurroundAACtoAC3 = false;
+        ForceTranscodingOfSurroundAACtoAC3 = false; // RANFT - ADDED
         EnableSubtitleExtraction = true;
         SubtitleExtractionTimeoutMinutes = 30;
         AllowOnDemandMetadataBasedKeyframeExtractionForExtensions = ["mkv"];

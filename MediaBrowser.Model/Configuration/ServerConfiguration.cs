@@ -289,6 +289,10 @@ public class ServerConfiguration : BaseApplicationConfiguration
     /// </summary>
     public bool EnableLegacyAuthorization { get; set; }
 
+    /*
+    // RANFT - Not used anymore.  Instead EncodingOptions.ForceTranscodeSurroundAACtoAC3 is used to control this behavior
+    // which is stored in encoding.xml and can be set via a modified version of jellyfin-web.
+    // TranscodeSurroundAACtoAC3 was set in system.xml and was not changable via the web GUI of jellyfin-web.  It was only settable via editing system.xml directly.  This is not a good user experience and is not user friendly.
     // RANFT - Start of added configuration options
 
     /// <summary>
@@ -297,4 +301,5 @@ public class ServerConfiguration : BaseApplicationConfiguration
     public bool TranscodeSurroundAACtoAC3 { get; set; }
 
     // RANFT - End of added configuration options
+    */
 }

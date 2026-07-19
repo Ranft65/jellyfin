@@ -31,6 +31,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
+using Microsoft.OpenApi;
 using Prometheus;
 
 namespace Jellyfin.Server
@@ -62,6 +63,15 @@ namespace Jellyfin.Server
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c => // RANFT - Added SwaggerGen to the service collection
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Jellyfin API",
+                    Version = "v1"
+                });
+            });
+
             services.AddResponseCompression();
             services.AddHttpContextAccessor();
             services.AddHttpsRedirection(options =>
@@ -168,6 +178,12 @@ namespace Jellyfin.Server
             IWebHostEnvironment env,
             IConfiguration appConfig)
         {
+            app.UseSwagger(); // RANFT - Added Swagger middleware to the application pipeline
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jellyfin API");
+            });
+
             app.UseBaseUrlRedirection();
 
             // Wrap rest of configuration so everything only listens on BaseUrl.

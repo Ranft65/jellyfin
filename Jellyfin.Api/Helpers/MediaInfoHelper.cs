@@ -256,9 +256,9 @@ public class MediaInfoHelper
 
         // Beginning of Playback Determination
 
-        var transcodeSurroundAACtoAC3 = _serverConfigurationManager.Configuration.TranscodeSurroundAACtoAC3; // RANFT - ADDED THIS LINE (Uses system.xml value)
+        // var transcodeSurroundAACtoAC3 = _serverConfigurationManager.Configuration.TranscodeSurroundAACtoAC3; // RANFT - ADDED THIS LINE (Uses system.xml value)
         var encodingOptions = _serverConfigurationManager.GetEncodingOptions();  // RANFT - ADDED THIS LINE (Uses encoding.xml set by modified Web GUI)
-        transcodeSurroundAACtoAC3 = encodingOptions.ForceTranscodingOfSurroundAACtoAC3; // RANFT - ADDED THIS LINE (Uses encoding.xml set by modified Web GUI)
+        var transcodeSurroundAACtoAC3 = encodingOptions.ForceTranscodingOfSurroundAACtoAC3; // RANFT - ADDED THIS LINE (Uses encoding.xml set by modified Web GUI)
 
         var streamInfo = item.MediaType == MediaType.Audio
             ? streamBuilder.GetOptimalAudioStream(options)
