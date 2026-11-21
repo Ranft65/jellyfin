@@ -32,8 +32,11 @@ namespace MediaBrowser.Model.Dlna
         private readonly ILogger _logger;
         private readonly ITranscoderSupport _transcoderSupport;
         private static readonly string[] _supportedHlsVideoCodecs = ["h264", "hevc", "vp9", "av1"];
-        private static readonly string[] _supportedHlsAudioCodecsTs = ["aac", "ac3", "eac3", "mp3"];
-        private static readonly string[] _supportedHlsAudioCodecsMp4 = ["aac", "ac3", "eac3", "mp3", "alac", "flac", "opus", "dts", "truehd"];
+        // RANFT - Removed readonly from _supportedHlsAudioCodecsTs and _supportedHlsAudioCodecsMp4
+        // private static readonly string[] _supportedHlsAudioCodecsTs = ["aac", "ac3", "eac3", "mp3"];
+        // private static readonly string[] _supportedHlsAudioCodecsMp4 = ["aac", "ac3", "eac3", "mp3", "alac", "flac", "opus", "dts", "truehd"];
+        private static string[] _supportedHlsAudioCodecsTs = ["aac", "ac3", "eac3", "mp3"];
+        private static string[] _supportedHlsAudioCodecsMp4 = ["aac", "ac3", "eac3", "mp3", "alac", "flac", "opus", "dts", "truehd"];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamBuilder"/> class.
@@ -231,8 +234,9 @@ namespace MediaBrowser.Model.Dlna
         /// Gets the optimal video stream.
         /// </summary>
         /// <param name="options">The <see cref="MediaOptions"/> object to get the video stream from.</param>
+        /// <param name="transcodeSurroundAACtoAC3">Boolean flag that indicates whether or not surround AAC should be transcoded to AC3.</param>
         /// <returns>The <see cref="StreamInfo"/> of the optimal video stream.</returns>
-        public StreamInfo? GetOptimalVideoStream(MediaOptions options)
+        public StreamInfo? GetOptimalVideoStream(MediaOptions options, bool transcodeSurroundAACtoAC3) // RANFT - Added passing transcodeSurroundAACtoAC3
         {
             ValidateMediaOptions(options, true);
 
@@ -255,6 +259,27 @@ namespace MediaBrowser.Model.Dlna
                 stream.DeviceId = options.DeviceId;
                 stream.DeviceProfileId = options.Profile.Id?.ToString("N", CultureInfo.InvariantCulture);
             }
+
+            // RANFT - START OF ADDITIONAL CODE
+            foreach (var stream in streams)
+            {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                // if ((stream.TargetAudioStream.Codec == "aac" && stream.TargetAudioStream.Channels > 2) || stream.TargetAudioStream.Codec == "truehd")
+                if (transcodeSurroundAACtoAC3 && stream.TargetAudioStream.Codec == "aac" && stream.TargetAudioStream.Channels > 2)
+                {
+                    for (int j = 0; j < stream.AudioCodecs.Count; j++)
+                    {
+                        // if (stream.AudioCodecs[j] == "aac" || stream.AudioCodecs[j] == "truehd" )
+                        if (stream.AudioCodecs[j] == "aac")
+                        {
+                            stream.AudioCodecs[j] = "ac3";
+                        }
+                    }
+                }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            }
+
+            // RANFT - END OF ADDITIONAL CODE
 
             return GetOptimalStream(streams, options.GetMaxBitrate(false) ?? 0);
         }
@@ -1113,7 +1138,7 @@ namespace MediaBrowser.Model.Dlna
 
             var appliedAudioConditions = options.Profile.CodecProfiles
                 .Where(i => i.Type == CodecType.VideoAudio &&
-                    i.ContainsAnyCodec(playlistItem.AudioCodecs, container) &&
+                    i.ContainsAnyCodec((IReadOnlyList<string>)playlistItem.AudioCodecs, container) && // RANFT - NEED TO ADD THE (IReadOnlyList<string>) CAST FOR OUR FIX TO WORK
                     i.ApplyConditions.All(applyCondition => ConditionProcessor.IsVideoAudioConditionSatisfied(applyCondition, audioChannels, inputAudioBitrate, inputAudioSampleRate, inputAudioBitDepth, audioProfile, isSecondaryAudio)))
                 // Reverse codec profiles for backward compatibility - first codec profile has higher priority
                 .Reverse();
@@ -2485,6 +2510,15 @@ namespace MediaBrowser.Model.Dlna
             {
                 failures |= TranscodeReason.AudioIsExternal;
             }
+
+            // RANFT - START OF ADDITIONAL CODE
+            // if ((audioStream.Codec == "aac" && audioStream.Channels > 2) || audioStream.Codec == "truehd")
+            if (audioStream.Codec == "aac" && audioStream.Channels > 2)
+            {
+                failures |= TranscodeReason.AudioChannelsNotSupported;
+            }
+
+            // RANFT - END OF ADDITIONAL CODE
 
             return failures;
         }

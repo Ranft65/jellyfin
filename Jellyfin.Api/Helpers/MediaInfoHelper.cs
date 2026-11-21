@@ -12,6 +12,7 @@ using Jellyfin.Data.Enums;
 using Jellyfin.Database.Implementations.Entities;
 using Jellyfin.Database.Implementations.Enums;
 using Jellyfin.Extensions;
+using MediaBrowser.Common.Configuration; // RANFT ADDED FOR OUR FIX
 using MediaBrowser.Common.Extensions;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Controller;
@@ -264,10 +265,17 @@ public class MediaInfoHelper
             options.EnableDirectStream = false;
         }
 
+        // RANFT - START OF ADDITIONAL CODE
+        // This code block can trancodeSurroundAACtoAC3 to the value from encoding.xml (set by modified Web GUI) or from system.xml (Not changable by the official Web GUI)
+        // var transcodeSurroundAACtoAC3 = _serverConfigurationManager.Configuration.TranscodeSurroundAACtoAC3; // Use system.xml value
+        var encodingOptions = _serverConfigurationManager.GetEncodingOptions();                                 // Use encoding.xml set by modified Web GUI
+        var transcodeSurroundAACtoAC3 = encodingOptions.ForceTranscodingOfSurroundAACtoAC3;                     // Uses encoding.xml set by modified Web GUI
+        // RANFT - END OF ADDITIONAL CODE
+
         // Beginning of Playback Determination
         var streamInfo = item.MediaType == MediaType.Audio
             ? streamBuilder.GetOptimalAudioStream(options)
-            : streamBuilder.GetOptimalVideoStream(options);
+            : streamBuilder.GetOptimalVideoStream(options, transcodeSurroundAACtoAC3); // RANFT - ADDED transcodeSurroundAACtoAC3 as a parameter to GetOptimalVideoStream
 
         if (streamInfo is not null)
         {

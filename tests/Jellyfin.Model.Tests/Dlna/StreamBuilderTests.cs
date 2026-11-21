@@ -394,7 +394,7 @@ namespace Jellyfin.Model.Tests
 
             var builder = GetStreamBuilder();
 
-            var streamInfo = builder.GetOptimalVideoStream(options);
+            var streamInfo = builder.GetOptimalVideoStream(options, false); // RANFT - added false due to changes to GetOptimalVideoStream
             Assert.NotNull(streamInfo);
 
             var mediaSource = options.MediaSources.First(source => source.Id == streamInfo.MediaSourceId);
@@ -428,7 +428,7 @@ namespace Jellyfin.Model.Tests
             options.AudioStreamIndex = 2;
             options.SubtitleStreamIndex = subtitleStream.Index;
 
-            var streamInfo = GetStreamBuilder(enableSubtitleExtraction: false).GetOptimalVideoStream(options);
+            var streamInfo = GetStreamBuilder(enableSubtitleExtraction: false).GetOptimalVideoStream(options, false); // RANFT - added false due to changes to GetOptimalVideoStream
 
             Assert.NotNull(streamInfo);
             Assert.Equal(PlayMethod.Transcode, streamInfo.PlayMethod);
@@ -452,7 +452,7 @@ namespace Jellyfin.Model.Tests
 
             var builder = GetStreamBuilder();
 
-            var streamInfo = builder.GetOptimalVideoStream(options);
+            var streamInfo = builder.GetOptimalVideoStream(options, false); // RANFT - added false due to changes to GetOptimalVideoStream
             Assert.NotNull(streamInfo);
 
             if (playMethod is not null)

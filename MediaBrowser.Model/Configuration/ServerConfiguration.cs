@@ -293,4 +293,18 @@ public class ServerConfiguration : BaseApplicationConfiguration
     /// Gets or sets a value indicating whether obsolete endpoints are allowed.
     /// </summary>
     public bool EnableObsoleteEndpoints { get; set; } = true;
+
+    /*
+    // RANFT - Not used anymore.  Instead EncodingOptions.ForceTranscodeSurroundAACtoAC3 is used to control this behavior
+    // which is stored in encoding.xml and can be set via a modified version of jellyfin-web.
+    // TranscodeSurroundAACtoAC3 was set in system.xml and was not changable via the web GUI of jellyfin-web.  It was only settable via editing system.xml directly.  This is not a good user experience and is not user friendly.
+    // RANFT - Start of added configuration options
+
+    /// <summary>
+    /// Gets or sets a value indicating Whether surround AAC should be transcoded to AC3.
+    /// </summary>
+    public bool TranscodeSurroundAACtoAC3 { get; set; }
+
+    // RANFT - End of added configuration options
+    */
 }

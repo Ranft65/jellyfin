@@ -58,6 +58,7 @@ public class EncodingOptions
         EnableHardwareEncoding = true;
         AllowHevcEncoding = false;
         AllowAv1Encoding = false;
+        ForceTranscodingOfSurroundAACtoAC3 = false; // RANFT - ADDED
         EnableSubtitleExtraction = true;
         SubtitleExtractionTimeoutMinutes = 30;
         AllowOnDemandMetadataBasedKeyframeExtractionForExtensions = ["mkv"];
@@ -284,6 +285,14 @@ public class EncodingOptions
     /// Gets or sets a value indicating whether AV1 encoding is enabled.
     /// </summary>
     public bool AllowAv1Encoding { get; set; }
+
+    // RANFT - START OF ADDITIONAL CODE
+
+    /// <summary>
+    /// Gets or sets a value indicating whether Surround AAC is always transcoded to AC3.  RANFT ADDED.
+    /// </summary>
+    public bool ForceTranscodingOfSurroundAACtoAC3 { get; set; }
+    // RANFT - END OF ADDITIONAL CODE
 
     /// <summary>
     /// Gets or sets a value indicating whether subtitle extraction is enabled.
